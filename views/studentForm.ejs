@@ -1,0 +1,61 @@
+<% layout('boilerplate') -%>
+
+
+<main class="container">
+
+
+    <h2>Student Registration</h2>
+
+    <% if (message) { %>
+        <div class="message <%= message.includes('❌') ? 'error' : 'success' %>">
+            <%= message %>
+        </div>
+        <script>
+            setTimeout(() => {
+                document.querySelector('.message').style.display = 'none';
+            }, 5000);
+        </script>
+    <% } %>
+
+
+   
+
+
+    <form action="/register-student" method="POST">
+
+
+        
+        <label for="name">Student Name:</label>
+        <input type="text" id="name" name="name" required>
+
+        <label for="email">Email:</label>
+        <input type="email" id="email" name="email" required>
+
+        <label for="phone">Mobile Number:</label>
+        <input type="text" id="phone" name="phone" required pattern="[0-9]{10}" placeholder="Enter 10-digit mobile number">
+
+        <label for="parentName">Parent's Name:</label>
+        <input type="text" id="parentName" name="parentName" required>
+
+        <label for="parentContact">Parent's Contact:</label>
+        <input type="text" id="parentContact" name="parentContact" required pattern="[0-9]{10}" placeholder="Enter 10-digit parent contact">
+
+        <label for="deviceId">Device ID:</label>
+        <input type="text" id="deviceId" name="deviceId" required placeholder="Enter your Device ID">
+
+        <label for="schoolName">School Name:</label>
+        <input type="text" id="schoolName" name="schoolName" required>
+
+        <button type="submit" class="btn btn-success">Submit</button>
+
+
+
+
+
+
+
+    </form>
+</main>
+
+    
+

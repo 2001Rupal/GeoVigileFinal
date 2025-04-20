@@ -1,0 +1,241 @@
+/* General Styling */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    text-align: center;
+    box-sizing: border-box;
+    background-color: #f0f2f5;
+    overflow: auto;
+}
+
+header {
+    background-color: #0078FF;
+    color: #fff;
+    padding: 1rem;
+    text-align: center;
+}
+
+.highlight {
+    color: #ff6600;
+}
+
+nav a {
+    color: #fff;
+    margin: 0 10px;
+    text-decoration: none;
+}
+
+/* Hero Section */
+.hero {
+    background: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('/images/bg.jpg');
+    background-size: cover;
+    color: white;
+    text-align: center;
+    padding: 80px 20px;
+}
+
+.hero-content h1 {
+    font-size: 3rem;
+    margin-bottom: 10px;
+}
+
+.hero-content h2 {
+    font-size: 1.8rem;
+    margin-bottom: 20px;
+}
+
+/* Buttons */
+.btn {
+    background-color: #0078FF;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    text-decoration: none;
+    display: inline-block;
+    font-weight: bold;
+    transition: background 0.3s ease;
+    cursor: pointer;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+
+.btn-secondary {
+    background-color: #6c757d;
+}
+
+.btn-secondary:hover {
+    background-color: #545b62;
+}
+
+.btn-success {
+    background-color: green;
+}
+
+.btn-success:hover {
+    background-color: darkgreen;
+}
+
+/* Features Section */
+.features {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-around;
+    padding: 40px;
+    background: #fff;
+}
+
+.feature {
+    text-align: center;
+    padding: 20px;
+    width: 30%;
+}
+
+/* Footer */
+.footer {
+    background: #333;
+    color: white;
+    padding: 10px;
+    text-align: center;
+    width: 100%;
+}
+
+/* Registration Form */
+.registration-container {
+    width: 50%;
+    margin: 50px auto;
+    padding: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    max-height: 80vh;  /* Prevents it from overflowing */
+    overflow-y: auto;  /* Enables vertical scrolling */
+}
+
+.registration-form {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+
+label {
+    font-weight: bold;
+    margin-bottom: 5px;
+    display: block;
+}
+
+input, textarea, select {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+/* Admin Panel */
+.admin-panel {
+    background: #f8f9fa;
+    padding: 15px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-top: 20px;
+}
+
+.admin-panel h3 {
+    color: #007BFF;
+}
+
+.admin-panel ul {
+    list-style: none;
+    padding: 0;
+}
+
+.admin-panel ul li {
+    padding: 5px 0;
+}
+
+.admin-panel a {
+    text-decoration: none;
+    color: #007BFF;
+    font-weight: bold;
+}
+
+.admin-panel a:hover {
+    text-decoration: underline;
+}
+
+/* Tables */
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+th, td {
+    border: 1px solid #ddd;
+    padding: 10px;
+    text-align: left;
+}
+
+th {
+    background-color: #007BFF;
+    color: white;
+}
+
+table tr:hover {
+    background-color: #f1f1f1;
+}
+
+/* Modal Styling */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+    overflow-y: auto;  /* Allows scrolling */
+}
+
+.modal-content {
+    background-color: #fff;
+    margin: 10% auto;
+    padding: 20px;
+    border-radius: 8px;
+    width: 30%;
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    text-align: center;
+}
+
+.close-btn {
+    color: red;
+    float: right;
+    font-size: 28px;
+    cursor: pointer;
+}
+
+/* Responsive Design */
+@media (max-width: 768px) {
+    .registration-container, .container {
+        width: 90%;
+        padding: 15px;
+        
+    }
+
+    .feature {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .modal-content {
+        width: 80%;
+    }
+}

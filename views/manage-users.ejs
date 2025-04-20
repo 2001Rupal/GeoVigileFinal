@@ -1,0 +1,60 @@
+<%- layout("boilerplate") %>
+
+<main class="container">
+    <h2>Manage Users</h2>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Name</th>
+                <th>Email</th>
+                <th>Role</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% users.forEach(user => { %>
+                <tr>
+                    <td><%= user.name %></td>
+                    <td><%= user.email %></td>
+                    <td><%= user.role %></td>
+                    <td>
+                        <% if (currentUser.role === 'superadmin') { %>
+                            <% if (user.role !== 'superadmin') { %>
+                                <form action="/admin/demote-user/<%= user._id %>" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-warning">Demote to User</button>
+                                </form>
+                                
+                                <% if (user.role === 'user') { %>
+                                    <form action="/admin/upgrade-user/<%= user._id %>" method="POST" style="display:inline;">
+                                        <button type="submit" class="btn btn-success">Make Admin</button>
+                                    </form>
+                                <% } %>
+                                
+                                <form action="/admin/delete-user/<%= user._id %>" method="POST" style="display:inline;">
+                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                </form>
+                            <% } else { %>
+                                <span class="admin-badge">Super Admin</span>
+                            <% } %>
+
+                        <% } else if (currentUser.role === 'admin') { %>
+                            <% if (user.role === 'admin') { %>
+                                <span class="admin-badge">Admin</span>
+                            <% } %>
+
+                        <% } else { %>
+                            <% if (user._id === currentUser._id) { %>
+                                <span class="user-badge">You</span>
+                            <% } else { %>
+                                <span class="user-badge">User</span>
+                            <% } %>
+                        <% } %>
+                    </td>
+                </tr>
+            <% }) %>
+        </tbody>
+    </table>
+
+    <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+</main>

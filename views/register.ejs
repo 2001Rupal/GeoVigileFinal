@@ -1,0 +1,58 @@
+<%- layout('boilerplate') %>
+
+<main class="registration-container">
+    <h2>Register Your Institute</h2>
+    <form action="/register" method="POST" class="registration-form">
+        <div class="form-group">
+            <label for="name">Institute Name:</label>
+            <input type="text" id="name" name="name" required>
+        </div>
+
+        <div class="form-group">
+            <label for="email">Email Address:</label>
+            <input type="email" id="email" name="email" required>
+        </div>
+
+        <div class="form-group">
+            <label for="phone">Contact Number:</label>
+            <input type="tel" id="phone" name="phone" required>
+        </div>
+
+        <div class="form-group">
+            <label for="address">Address:</label>
+            <textarea id="address" name="address" rows="3" required></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="type">Institute Type:</label>
+            <select id="type" name="type" required>
+                <option value="">Select Type</option>
+                <option value="school">School</option>
+                <option value="college">College</option>
+                <option value="university">University</option>
+                <option value="training_center">Training Center</option>
+            </select>
+        </div>
+        <div class="form-group">
+            <label for="role">Role:</label>
+            <select id="role" name="role">
+                <option value="user">User</option>
+                <option value="admin">Admin</option>
+                <option value="superadmin">Superadmin</option>
+            </select>
+        </div>
+        
+
+        <div class="form-group">
+            <label for="password">Create Password:</label>
+            <input type="password" id="password" name="password" required>
+        </div>
+
+        <div class="form-group">
+            <label for="confirm-password">Confirm Password:</label>
+            <input type="password" id="confirm-password" name="confirmPassword" required>
+        </div>
+
+        <button type="submit" class="btn">Register</button>
+    </form>
+</main>

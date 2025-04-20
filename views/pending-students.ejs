@@ -1,0 +1,38 @@
+<% layout("boilerplate") %>
+
+<h2>Pending Students</h2>
+<table border="1">
+    <tr>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone</th>
+        <th>Device ID</th>
+        <th>Father Name </th>
+        <th>Father Contact</th>
+
+        <th>Actions</th>
+    </tr>
+    <% if (students.length === 0) { %>
+        <tr><td colspan="4">No pending students found.</td></tr>
+    <% } %>
+    <% students.forEach(student => { %>
+        <tr>
+            <td><%= student.name %></td>
+            <td><%= student.email %></td>
+            <td><%= student.phone %></td>
+            <td><%= student.deviceId %></td>
+            <td><%= student.parentName %></td>
+            <td><%= student.parentContact %></td>
+
+
+            <td>
+                <form action="/admin/approve-student/<%= student._id %>" method="POST">
+                    <button type="submit">Approve</button>
+                </form>
+                <form action="/admin/reject-student/<%= student._id %>" method="POST">
+                    <button type="submit">Reject</button>
+                </form>
+            </td>
+        </tr>
+    <% }); %>
+</table>

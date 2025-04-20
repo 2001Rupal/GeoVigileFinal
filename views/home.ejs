@@ -1,0 +1,123 @@
+<% layout('boilerplate') -%>
+
+<main class="hero">
+    <div class="hero-content">
+        <h1>Welcome to <span class="highlight">GeoVigile</span></h1>
+        <h2>Advanced Geofencing & Security Alerts</h2>
+
+        <a href="/register" class="btn">Get Started</a>
+        <a href="/login" class="btn btn-secondary">Login</a>
+        <a href="/student-form" class="btn btn-primary">Register Student</a>
+    </div>
+</main>
+
+<section class="features">
+    <div class="feature">
+        <h3>📍 Real-Time Tracking</h3>
+        <p>Monitor and track locations effortlessly.</p>
+    </div>
+    <div class="feature">
+        <h3> Geofencing Alerts</h3>
+        <p>Receive alerts when users enter or exit specific areas.</p>
+    </div>
+    <div class="feature">
+        <h3> Safe & Secure</h3>
+        <p>Enhanced protection for communities and individuals.</p>
+    </div>
+</section>
+
+<!-- Student Registration Modal -->
+<div id="studentRegisterModal" class="modal">
+    <div class="modal-content">
+        <span class="close-btn" id="closeModal">&times;</span>
+        <h2>Student Registration</h2>
+
+       
+        
+
+        <form action="/register-student" method="POST">
+            <label for="name">Student Name:</label>
+            <input type="text" id="name" name="name" required>
+
+            <label for="email">Email:</label>
+            <input type="email" id="email" name="email" required>
+
+            <label for="phone">Mobile Number:</label>
+            <input type="text" id="phone" name="phone" required pattern="[0-9]{10}" placeholder="Enter 10-digit mobile number">
+
+            <label for="parentName">Parent's Name:</label>
+            <input type="text" id="parentName" name="parentName" required>
+
+            <label for="parentContact">Parent's Contact:</label>
+            <input type="text" id="parentContact" name="parentContact" required pattern="[0-9]{10}" placeholder="Enter 10-digit parent contact">
+
+            <label for="deviceId">Device ID:</label>
+            <input type="text" id="deviceId" name="deviceId" required placeholder="Enter your Device ID">
+
+            <label for="schoolName">School Name:</label>
+            <input type="text" id="schoolName" name="schoolName" required>
+
+            <button type="submit" class="btn btn-success">Submit</button>
+        </form>
+    </div>
+</div>
+
+ <!-- Success/error msg box -->
+<div id="messageBox" class="message" style="display: none;"></div>
+
+
+<script>
+    document.querySelector("form").addEventListener("submit", async function(event) {
+        event.preventDefault(); // Form reload hone se roko
+
+        let formData = new FormData(this);
+
+        try {
+            let response = await fetch("/register-student", {
+                method: "POST",
+                body: formData
+            });
+
+            let result = await response.json(); // JSON response lo
+
+            let messageBox = document.getElementById("messageBox");
+
+            if (response.ok) {
+                messageBox.innerText = "Student registered successfully! Waiting for Admin Approval.";
+                messageBox.style.backgroundColor = "#4CAF50"; 
+            } else {
+                messageBox.innerText = " Registration failed: " + result.message;
+                messageBox.style.backgroundColor = "#f44336"; 
+            }
+
+            messageBox.style.display = "block"; // msg show karo
+            document.getElementById("studentRegisterModal").style.display = "none"; //  close Modal
+            this.reset(); //  reset Form
+
+            // msg 5 sec baad hide 
+            setTimeout(() => {
+                messageBox.style.display = "none";
+            }, 5000);
+
+        } catch (error) {
+            let messageBox = document.getElementById("messageBox");
+            messageBox.innerText = " Error submitting the form.";
+            messageBox.style.backgroundColor = "#f44336"; // Red
+            messageBox.style.display = "block";
+        }
+    });
+</script>
+
+<script>
+    // Modal Open and Close
+    document.getElementById("openStudentRegisterModal").addEventListener("click", function() {
+        document.getElementById("studentRegisterModal").style.display = "block";
+    });
+
+    document.getElementById("closeModal").addEventListener("click", function() {
+        document.getElementById("studentRegisterModal").style.display = "none";
+    });
+</script>
+
+
+

@@ -1,0 +1,119 @@
+<%- layout("boilerplate") %>
+
+<main class="container">
+    <h2>Welcome, <%= user.name %>!</h2>
+    <p>Your Role: <strong><%= user.role %></strong></p>
+
+    <% if (user.role === "admin" || user.role === "superadmin") { %>
+        <div class="admin-panel">
+            <h3>Admin Panel</h3>
+            <ul>
+                <li><a href="/admin/manage-users">Manage Users</a></li>
+                
+                <li><a href="/admin/pending-students">Pending Student Approvals</a></li> 
+
+                <li><a href="/settings">Platform Settings</a></li>
+            </ul>
+        </div>
+
+         <!-- Set GeoFence Button -->
+         <button id="toggleGeoFenceForm" class="btn btn-primary">Set GeoFence</button>
+
+         <!-- Hidden GeoFence Form -->
+         <div id="geoFenceForm" style="display: none; margin-top: 20px;">
+             <h3>Set GeoFence</h3>
+             <form action="/geo/create" method="POST">
+                 <label>Geo-Fence Name:</label>
+                 <input type="text" name="name" required>
+                 
+                 <label>Latitude:</label>
+                 <input type="number" step="any" name="latitude" required>
+
+                 <label>Longitude:</label>
+                 <input type="number" step="any" name="longitude" required>
+
+                 <label>Radius (meters):</label>
+                 <input type="number" name="radius" required>
+
+                 <button type="submit" class="btn btn-success">Create Geo-Fence</button>
+             </form>
+         </div>
+
+         <h3>Existing Geo-Fences</h3>
+         <div id="map" style="height: 400px;"></div>
+     </div>
+
+
+    <% } else { %>
+        <p>Welcome to the GeoVigile platform! Stay updated with your alerts.</p>
+
+
+        <!--  GeoFence Tracking -->
+        <h3>Live Location Tracking</h3>
+        <div id="map" style="height: 400px;"></div>
+        <p id="location-status">Checking location...</p>
+
+
+    <% } %>
+
+    <a href="/logout" class="btn btn-danger">Logout</a>
+</main>
+
+
+<!--  GeoFence Toggle Script -->
+<script>
+    document.getElementById("toggleGeoFenceForm").addEventListener("click", function() {
+        var form = document.getElementById("geoFenceForm");
+        if (form.style.display === "none") {
+            form.style.display = "block"; // Show form
+            this.innerText = "Hide GeoFence Form"; // Change button text
+        } else {
+            form.style.display = "none"; // Hide form
+            this.innerText = "Set GeoFence"; // Reset button text
+        }
+    });
+</script>
+
+<!--  Google Maps Script -->
+<script>
+    function initMap() {
+        console.log("Google Maps Initialized");
+
+        const map = new google.maps.Map(document.getElementById("map"), {
+            center: { lat: 22.7196, lng: 75.8577 }, // Indore Default
+            zoom: 12
+        });
+
+        fetch("/geo/fences")
+            .then(res => res.json())
+            .then(data => {
+                console.log("Fetched GeoFences:", data); // Debugging
+
+                if (data.geoFences && data.geoFences.length > 0) {
+
+
+                data.geoFences.forEach(fence => {
+
+                    console.log("Plotting:", fence);
+
+                    new google.maps.Circle({
+
+                        strokeColor: "#FF0000",
+                        strokeOpacity: 0.8,
+                        strokeWeight: 2,
+                        fillColor: "#FF0000",
+                        fillOpacity: 0.35,
+                        map,
+                        center: { lat: fence.latitude, lng: fence.longitude },
+                        radius: fence.radius
+                    });
+                });
+            } else {
+                    console.error("No geofences found!");
+                }
+            })
+            .catch(err => console.error("Error fetching geo-fences:", err));
+    }
+</script>
+
+<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyAqJWbC_lMEzz0Q_vxDlWCiYuY9YuiJNHo&callback=initMap" async defer></script>
