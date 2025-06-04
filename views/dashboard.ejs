@@ -1,80 +1,80 @@
 <%- layout("boilerplate") %>
 
-<main class="container">
-    <h2>Welcome, <%= user.name %>!</h2>
-    <p>Your Role: <strong><%= user.role %></strong></p>
+<main class="container mx-auto px-4 py-6">
+    <h2 class="text-3xl font-semibold mb-4">Welcome, <%= user.name %>!</h2>
+    <p class="text-lg mb-4">Your Role: <strong><%= user.role %></strong></p>
 
     <% if (user.role === "admin" || user.role === "superadmin") { %>
-        <div class="admin-panel">
-            <h3>Admin Panel</h3>
-            <ul>
-                <li><a href="/admin/manage-users">Manage Users</a></li>
-                
-                <li><a href="/admin/pending-students">Pending Student Approvals</a></li> 
-
-                <li><a href="/settings">Platform Settings</a></li>
+        <div class="bg-gray-200 p-6 rounded-lg shadow-lg mb-6">
+            <h3 class="text-xl font-bold mb-4">Admin Panel</h3>
+            <ul class="space-y-2">
+            <div> <li><a href="/admin/manage-users" class="text-blue-500 hover:underline">Manage Users</a></li></div> 
+                <li><a href="/admin/pending-students" class="text-blue-500 hover:underline">Pending Student Approvals</a></li>
+                <li><a href="/settings" class="text-blue-500 hover:underline">Platform Settings</a></li>
             </ul>
         </div>
 
-         <!-- Set GeoFence Button -->
-         <button id="toggleGeoFenceForm" class="btn btn-primary">Set GeoFence</button>
+        <!-- Set GeoFence Button -->
+        <button id="toggleGeoFenceForm" class="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition duration-300 mb-6">Set GeoFence</button>
 
-         <!-- Hidden GeoFence Form -->
-         <div id="geoFenceForm" style="display: none; margin-top: 20px;">
-             <h3>Set GeoFence</h3>
-             <form action="/geo/create" method="POST">
-                 <label>Geo-Fence Name:</label>
-                 <input type="text" name="name" required>
-                 
-                 <label>Latitude:</label>
-                 <input type="number" step="any" name="latitude" required>
+        <!-- Hidden GeoFence Form -->
+        <div id="geoFenceForm" class="hidden bg-white p-6 rounded-lg shadow-lg mb-6">
+            <h3 class="text-xl font-bold mb-4">Set GeoFence</h3>
+            <form action="/geo/create" method="POST">
+                <div class="mb-4">
+                    <label for="name" class="block text-sm font-medium text-gray-700">Geo-Fence Name:</label>
+                    <input type="text" name="name" id="name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
 
-                 <label>Longitude:</label>
-                 <input type="number" step="any" name="longitude" required>
+                <div class="mb-4">
+                    <label for="latitude" class="block text-sm font-medium text-gray-700">Latitude:</label>
+                    <input type="number" step="any" name="latitude" id="latitude" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
 
-                 <label>Radius (meters):</label>
-                 <input type="number" name="radius" required>
+                <div class="mb-4">
+                    <label for="longitude" class="block text-sm font-medium text-gray-700">Longitude:</label>
+                    <input type="number" step="any" name="longitude" id="longitude" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
 
-                 <button type="submit" class="btn btn-success">Create Geo-Fence</button>
-             </form>
-         </div>
+                <div class="mb-4">
+                    <label for="radius" class="block text-sm font-medium text-gray-700">Radius (meters):</label>
+                    <input type="number" name="radius" id="radius" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+                </div>
 
-         <h3>Existing Geo-Fences</h3>
-         <div id="map" style="height: 400px;"></div>
-     </div>
+                <button type="submit" class="bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition duration-300">Create Geo-Fence</button>
+            </form>
+        </div>
 
+        <h3 class="text-xl font-bold mb-4">Existing Geo-Fences</h3>
+        <div id="map" class="h-96 mb-6"></div>
 
     <% } else { %>
-        <p>Welcome to the GeoVigile platform! Stay updated with your alerts.</p>
+        <p class="text-lg mb-4">Welcome to the GeoVigile platform! Stay updated with your alerts.</p>
 
-
-        <!--  GeoFence Tracking -->
-        <h3>Live Location Tracking</h3>
-        <div id="map" style="height: 400px;"></div>
-        <p id="location-status">Checking location...</p>
-
-
+        <!-- GeoFence Tracking -->
+        <h3 class="text-xl font-bold mb-4">Live Location Tracking</h3>
+        <div id="map" class="h-96 mb-6"></div>
+        <p id="location-status" class="text-sm text-gray-600">Checking location...</p>
     <% } %>
 
-    <a href="/logout" class="btn btn-danger">Logout</a>
+    <a href="/logout" class="bg-red-500 text-white py-2 px-4 rounded-lg hover:bg-red-600 transition duration-300">Logout</a>
 </main>
 
-
-<!--  GeoFence Toggle Script -->
+<!-- GeoFence Toggle Script -->
 <script>
     document.getElementById("toggleGeoFenceForm").addEventListener("click", function() {
         var form = document.getElementById("geoFenceForm");
-        if (form.style.display === "none") {
-            form.style.display = "block"; // Show form
-            this.innerText = "Hide GeoFence Form"; // Change button text
+        if (form.classList.contains("hidden")) {
+            form.classList.remove("hidden");
+            this.innerText = "Hide GeoFence Form";
         } else {
-            form.style.display = "none"; // Hide form
-            this.innerText = "Set GeoFence"; // Reset button text
+            form.classList.add("hidden");
+            this.innerText = "Set GeoFence";
         }
     });
 </script>
 
-<!--  Google Maps Script -->
+<!-- Google Maps Script -->
 <script>
     function initMap() {
         console.log("Google Maps Initialized");
@@ -84,31 +84,59 @@
             zoom: 12
         });
 
+        if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition(
+                function(position) {
+                    const userLocation = {
+                        lat: position.coords.latitude,
+                        lng: position.coords.longitude
+                    };
+                    map.setCenter(userLocation); // Set the map center to current location
+                    map.setZoom(15);
+                    new google.maps.Marker({
+                        position: userLocation,
+                        map: map,
+                        title: "You are here"
+                    });
+
+                    console.log("Current location:", userLocation);
+                },
+                function(error) {
+                    console.error("Error getting location:", error);
+                    const errorMessage = `Error: ${error.message}`;
+                    alert(errorMessage); // Show an alert for the error
+
+                    const defaultLocation = { lat: 22.7196, lng: 75.8577 }; // Indore Default
+                    map.setCenter(defaultLocation);
+                    map.setZoom(12); 
+                }
+            );
+        } else {
+            console.error("Geolocation is not supported by this browser.");
+            const defaultLocation = { lat: 22.7196, lng: 75.8577 }; // Indore Default
+            map.setCenter(defaultLocation);
+            map.setZoom(12);
+        }
+
         fetch("/geo/fences")
             .then(res => res.json())
             .then(data => {
-                console.log("Fetched GeoFences:", data); // Debugging
+                console.log("Fetched GeoFences:", data);
 
                 if (data.geoFences && data.geoFences.length > 0) {
-
-
-                data.geoFences.forEach(fence => {
-
-                    console.log("Plotting:", fence);
-
-                    new google.maps.Circle({
-
-                        strokeColor: "#FF0000",
-                        strokeOpacity: 0.8,
-                        strokeWeight: 2,
-                        fillColor: "#FF0000",
-                        fillOpacity: 0.35,
-                        map,
-                        center: { lat: fence.latitude, lng: fence.longitude },
-                        radius: fence.radius
+                    data.geoFences.forEach(fence => {
+                        new google.maps.Circle({
+                            strokeColor: "#FF0000",
+                            strokeOpacity: 0.8,
+                            strokeWeight: 2,
+                            fillColor: "#FF0000",
+                            fillOpacity: 0.35,
+                            map,
+                            center: { lat: fence.latitude, lng: fence.longitude },
+                            radius: fence.radius
+                        });
                     });
-                });
-            } else {
+                } else {
                     console.error("No geofences found!");
                 }
             })

@@ -1,22 +1,33 @@
 <%- layout("boilerplate") %>
 
-<main class="container">
-    <h2>Login</h2>
+<main class="max-w-md mx-auto mt-20 p-6 bg-white rounded-lg shadow-lg">
+    <h2 class="text-2xl font-bold mb-6 text-center">Login</h2>
+
     <% if (error_msg) { %>
-        <p class="error"><%= error_msg %></p>
+        <p class="text-red-600 text-center mb-4"><%= error_msg %></p>
     <% } %>
 
-    <form action="/login" method="POST" class="login-form">
-        <label for="email">Email Address:</label>
-        <input type="email" id="email" name="email" required>
+    <form action="/login" method="POST" class="space-y-4">
+        <div>
+            <label for="email" class="block text-sm font-medium text-gray-700">Email Address:</label>
+            <input type="email" id="email" name="email" required
+                   class="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
 
-        <label for="password">Password:</label>
-        <input type="password" id="password" name="password" required>
+        <div>
+            <label for="password" class="block text-sm font-medium text-gray-700">Password:</label>
+            <input type="password" id="password" name="password" required
+                   class="mt-1 w-full px-4 py-2 border rounded-md focus:outline-none focus:ring-2 focus:ring-blue-400">
+        </div>
 
-        <button type="submit" class="btn">Login</button>
+        <button type="submit"
+                class="w-full bg-blue-600 text-white py-2 rounded-md hover:bg-blue-700 transition">
+            Login
+        </button>
     </form>
 
-    <p>Don't have an account? <a href="/register">Register here</a></p>
+    <p class="mt-4 text-center text-sm text-gray-600">
+        Don't have an account? 
+        <a href="/register" class="text-blue-600 hover:underline">Register here</a>
+    </p>
 </main>
-
-

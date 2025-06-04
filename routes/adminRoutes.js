@@ -16,8 +16,7 @@ router.get("/pending-students",ensureAdmin, async (req, res) => {
     try {
         const students = await Student.find({ status: "Pending" });
         console.log("Fetched students:", students); //-------------
-
-
+        
         res.render("pending-students", { students });
     } 
     catch (error) {

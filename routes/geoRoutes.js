@@ -1,11 +1,9 @@
 const express=require("express");
 const router=express.Router();
-const {GeoFence,Student}=require("../models/User");
+const {GeoFence,Student,EntryExitLog }=require("../models/User");
 const {ensureAuthenticated,ensureAdmin}=require("../middleware/auth");
 const sendEmail = require("../utils/sendEmail"); 
-
-
-
+const { v4: uuidv4 } = require("uuid"); 
 
 
 
@@ -16,16 +14,16 @@ router.post("/create",ensureAuthenticated,ensureAdmin, async(req,res)=>{
         if (!name || !latitude || !longitude || !radius ) {
             return res.status(400).json({ error: "All fields are required!" });
         }
+        const geofenceId = "geo-" + uuidv4();
         const newGeoFence=new GeoFence({
 
-            name,latitude,longitude,radius,
+            geofenceId,name,latitude,longitude,radius,
             createdBy:req.user._id
 
         });
 
         await newGeoFence.save();
          req.flash("success_msg", "GeoFence created successfully!");
-
         res.redirect("/dashboard");
 
 
@@ -77,8 +75,6 @@ router.post("/check-location", async (req, res) => {
         res.json({ inGeoFence });
     } catch (error) {
 
-
-
         console.error("Error checking location:", error);
         res.status(500).send("Server Error");    }
 });
@@ -123,9 +119,11 @@ router.post("/mobile-location-update",async (req,res)=>{
         }
 
         // Check if student is inside any geofence
-        const fences = await GeoFence.find();
-        let isInsideAnyFence  = false;
 
+        const fences = await GeoFence.find();
+
+        let isInsideAnyFence  = false;
+        
 
         fences.forEach(fence => {
             const dist = getDistance(latitude, longitude, fence.latitude, fence.longitude);
@@ -133,57 +131,98 @@ router.post("/mobile-location-update",async (req,res)=>{
         });
 
         const currentStatus = isInsideAnyFence ? "Inside" : "Outside";
+        const eventTime = new Date();
+        const today = new Date().toISOString().split("T")[0];
+       
+        console.log(`📌 Previous Status: ${student.lastKnownStatus}, Current Status: ${currentStatus}`);
 
-        // 🧠 Only send email if status has changed
+
         if (student.lastKnownStatus !== currentStatus) {
-
-
-            const eventTime = new Date().toLocaleString();
-
-
             const statusMsg = currentStatus === "Inside" ? "ENTERED" : "EXITED";
-            const alertMsg = `Your child ${student.name} has ${statusMsg} the school zone at ${eventTime}.`;
-
-            await sendEmail(student.email, `GeoVigile Alert: ${statusMsg}`, alertMsg);
 
 
-            console.log("📨 Email alert sent to", student.email);
+        // ✅ ENTRY CASE
+        if (currentStatus === "Inside") {
+            await EntryExitLog.updateOne(
+                { studentId: student._id, date: today },
+                {
+                    $push: {
+                        sessions: {
+                            entryTime: eventTime
+                        }
+                    }
+                },
+                { upsert: true }
+            );
+            const entryMsg = `Your child ${student.name} has ENTERED the school zone at ${eventTime.toLocaleString()}.`;
 
-            // Update student's last status
+             try {
+                    await sendEmail(student.email, "GeoVigile Alert: Entry", entryMsg);
+                    console.log("✅ Entry alert email sent to", student.email);
+                } catch (err) {
+                    console.error("❌ Failed to send entry email:", err);
+                }
+
+        // ✅ EXIT CASE
+        }else if (currentStatus === "Outside") {
+
+            const log = await EntryExitLog.findOne({ studentId: student._id, date: today });
+
+            if (log && log.sessions.length > 0) {
+                const lastSession = log.sessions[log.sessions.length - 1];
+
+                if (!lastSession.exitTime) {
+                        lastSession.exitTime = eventTime;
+
+                        const durationMs = eventTime - new Date(lastSession.entryTime);
+                        const minutes = Math.floor((durationMs / 1000 / 60) % 60);
+                        const hours = Math.floor(durationMs / 1000 / 60 / 60);
+                        const spentTimeStr = `${hours}h ${minutes}m`;
+
+                        lastSession.spentTime = spentTimeStr;
+                        await log.save();
+
+                        const summaryMsg = `Hello ${student.name},
+
+                    📅 Date: ${today}
+                    🕒 Entry Time: ${ new Date(lastSession.entryTime).toLocaleString()}
+                    🕕 Exit Time: ${eventTime.toLocaleString()}
+                    ⏱️ Time Spent: ${spentTimeStr}
+
+                    Thank you,  
+                    Team GeoVigile
+                                        `;
+
+                                        
+
+                                        try {
+                                            await sendEmail(student.email, "GeoVigile: Exit Summary", summaryMsg);
+                                            console.log("📨 Exit summary email sent to", student.email);
+                                        } catch (err) {
+                                            console.error("❌ Failed to send exit email:", err);
+                                        }
+                
+                                        console.log("🕒 Entry:", lastSession.entryTime);
+                                        console.log("🕕 Exit:", eventTime);
+                
+                        } else {
+                            console.log("⚠️ Last session already has an exitTime.");
+                        }
+
+                    }
+                 } else {
+                    console.log("⚠️ No entry log found for today.");
+                }
+
+                      // Update student's last known status
             student.lastKnownStatus = currentStatus;
-
-
             await student.save();
 
         } else {
             console.log(" No status change for", student.name);
         }
 
-       //--------------------------------------------------------------------
         
-
-        // if (!student.isInsideFence && isNowInside) {
-
-
-        //     console.log(` ENTRY: ${student.name} has ENTERED the geofence.`);
-
-        // } else if (student.isInsideFence && !isNowInside) {
-
-        //     console.log(` EXIT: ${student.name} has EXITED the geofence.`);
-
-
-        // } else {
-
-        //     console.log(` ${student.name} has no change in geofence status.`);
-        // }
-        
-        // Update current status
-        // student.isInsideFence = inside;
-
-
-
-
-        // await student.save();
 
 //-----------------------------------------------------------------------------
         // Just log the details for now

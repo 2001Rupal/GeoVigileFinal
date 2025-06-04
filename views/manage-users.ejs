@@ -1,53 +1,53 @@
 <%- layout("boilerplate") %>
 
-<main class="container">
-    <h2>Manage Users</h2>
+<main class="container mx-auto p-6">
+    <h2 class="text-2xl font-semibold mb-4">Manage Users</h2>
 
-    <table>
+    <table class="min-w-full table-auto border-collapse border border-gray-300">
         <thead>
             <tr>
-                <th>Name</th>
-                <th>Email</th>
-                <th>Role</th>
-                <th>Actions</th>
+                <th class="px-4 py-2 border border-gray-300 text-left">Name</th>
+                <th class="px-4 py-2 border border-gray-300 text-left">Email</th>
+                <th class="px-4 py-2 border border-gray-300 text-left">Role</th>
+                <th class="px-4 py-2 border border-gray-300 text-left">Actions</th>
             </tr>
         </thead>
         <tbody>
             <% users.forEach(user => { %>
-                <tr>
-                    <td><%= user.name %></td>
-                    <td><%= user.email %></td>
-                    <td><%= user.role %></td>
-                    <td>
+                <tr class="hover:bg-gray-100">
+                    <td class="px-4 py-2 border border-gray-300"><%= user.name %></td>
+                    <td class="px-4 py-2 border border-gray-300"><%= user.email %></td>
+                    <td class="px-4 py-2 border border-gray-300"><%= user.role %></td>
+                    <td class="px-4 py-2 border border-gray-300">
                         <% if (currentUser.role === 'superadmin') { %>
                             <% if (user.role !== 'superadmin') { %>
                                 <form action="/admin/demote-user/<%= user._id %>" method="POST" style="display:inline;">
-                                    <button type="submit" class="btn btn-warning">Demote to User</button>
+                                    <button type="submit" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600">Demote to User</button>
                                 </form>
                                 
                                 <% if (user.role === 'user') { %>
                                     <form action="/admin/upgrade-user/<%= user._id %>" method="POST" style="display:inline;">
-                                        <button type="submit" class="btn btn-success">Make Admin</button>
+                                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Make Admin</button>
                                     </form>
                                 <% } %>
                                 
                                 <form action="/admin/delete-user/<%= user._id %>" method="POST" style="display:inline;">
-                                    <button type="submit" class="btn btn-danger">Delete</button>
+                                    <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Delete</button>
                                 </form>
                             <% } else { %>
-                                <span class="admin-badge">Super Admin</span>
+                                <span class="bg-blue-500 text-white px-4 py-1 rounded">Super Admin</span>
                             <% } %>
 
                         <% } else if (currentUser.role === 'admin') { %>
                             <% if (user.role === 'admin') { %>
-                                <span class="admin-badge">Admin</span>
+                                <span class="bg-blue-500 text-white px-4 py-1 rounded">Admin</span>
                             <% } %>
 
                         <% } else { %>
                             <% if (user._id === currentUser._id) { %>
-                                <span class="user-badge">You</span>
+                                <span class="bg-gray-500 text-white px-4 py-1 rounded">You</span>
                             <% } else { %>
-                                <span class="user-badge">User</span>
+                                <span class="bg-gray-300 text-gray-800 px-4 py-1 rounded">User</span>
                             <% } %>
                         <% } %>
                     </td>
@@ -56,5 +56,5 @@
         </tbody>
     </table>
 
-    <a href="/dashboard" class="btn btn-secondary">Back to Dashboard</a>
+    <a href="/dashboard" class="mt-4 inline-block bg-gray-600 text-white px-6 py-2 rounded hover:bg-gray-700">Back to Dashboard</a>
 </main>

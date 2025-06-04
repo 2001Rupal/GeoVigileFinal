@@ -1,38 +1,41 @@
 <% layout("boilerplate") %>
 
-<h2>Pending Students</h2>
-<table border="1">
-    <tr>
-        <th>Name</th>
-        <th>Email</th>
-        <th>Phone</th>
-        <th>Device ID</th>
-        <th>Father Name </th>
-        <th>Father Contact</th>
-
-        <th>Actions</th>
-    </tr>
-    <% if (students.length === 0) { %>
-        <tr><td colspan="4">No pending students found.</td></tr>
-    <% } %>
-    <% students.forEach(student => { %>
+<h2 class="text-2xl font-semibold mb-4">Pending Students</h2>
+<table class="min-w-full table-auto border-collapse border border-gray-300">
+    <thead>
         <tr>
-            <td><%= student.name %></td>
-            <td><%= student.email %></td>
-            <td><%= student.phone %></td>
-            <td><%= student.deviceId %></td>
-            <td><%= student.parentName %></td>
-            <td><%= student.parentContact %></td>
-
-
-            <td>
-                <form action="/admin/approve-student/<%= student._id %>" method="POST">
-                    <button type="submit">Approve</button>
-                </form>
-                <form action="/admin/reject-student/<%= student._id %>" method="POST">
-                    <button type="submit">Reject</button>
-                </form>
-            </td>
+            <th class="px-4 py-2 border border-gray-300 text-left">Name</th>
+            <th class="px-4 py-2 border border-gray-300 text-left">Email</th>
+            <th class="px-4 py-2 border border-gray-300 text-left">Phone</th>
+            <th class="px-4 py-2 border border-gray-300 text-left">Device ID</th>
+            <th class="px-4 py-2 border border-gray-300 text-left">Father Name</th>
+            <th class="px-4 py-2 border border-gray-300 text-left">Father Contact</th>
+            <th class="px-4 py-2 border border-gray-300 text-left">Actions</th>
         </tr>
-    <% }); %>
+    </thead>
+    <tbody>
+        <% if (students.length === 0) { %>
+            <tr>
+                <td colspan="7" class="px-4 py-2 text-center border border-gray-300">No pending students found.</td>
+            </tr>
+        <% } %>
+        <% students.forEach(student => { %>
+            <tr class="hover:bg-gray-100">
+                <td class="px-4 py-2 border border-gray-300"><%= student.name %></td>
+                <td class="px-4 py-2 border border-gray-300"><%= student.email %></td>
+                <td class="px-4 py-2 border border-gray-300"><%= student.phone %></td>
+                <td class="px-4 py-2 border border-gray-300"><%= student.deviceId %></td>
+                <td class="px-4 py-2 border border-gray-300"><%= student.parentName %></td>
+                <td class="px-4 py-2 border border-gray-300"><%= student.parentContact %></td>
+                <td class="px-4 py-2 border border-gray-300">
+                    <form action="/admin/approve-student/<%= student._id %>" method="POST" class="inline">
+                        <button type="submit" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600">Approve</button>
+                    </form>
+                    <form action="/admin/reject-student/<%= student._id %>" method="POST" class="inline ml-2">
+                        <button type="submit" class="bg-red-500 text-white px-4 py-2 rounded hover:bg-red-600">Reject</button>
+                    </form>
+                </td>
+            </tr>
+        <% }); %>
+    </tbody>
 </table>

@@ -29,6 +29,7 @@ router.post("/login", (req, res, next) => {
 });
 
 
+
 // Show Dashboard (Only Logged-in Users)
 router.get("/dashboard", ensureAuthenticated, (req, res) => {
     res.render("dashboard", { user: req.user });

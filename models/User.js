@@ -31,7 +31,9 @@ const StudentSchema = new mongoose.Schema({
 });
 
 
+// -------------- GeoFence Schema
 const GeoFenceSchema=new mongoose.Schema({
+    geofenceId: { type: String, unique: true },
     name:String,
     latitude:Number,
     longitude:Number,
@@ -40,11 +42,35 @@ const GeoFenceSchema=new mongoose.Schema({
     createdAt:{type:Date,default:Date.now}
 
 });
+const SessionSchema = new mongoose.Schema({
+    entryTime: { type: Date, required: true },
+    exitTime: { type: Date, default: null },
+    spentTime: { type: String, default: null } // Format: "1h 23m"
+}, { _id: false }); // prevents Mongoose from creating an _id for each session
+
+
+// ---------- entry-exit Log Schema 
+const EntryExitLogSchema = new mongoose.Schema({
+    studentId: { 
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "Student",
+        required: true 
+    },
+    date: { 
+        type: String, 
+        required: true 
+    }, // Format: YYYY-MM-DD
+    sessions: [SessionSchema]
+        
+    
+});
+
 
 const User = mongoose.model("User", UserSchema);
 const Student = mongoose.model("Student", StudentSchema);
 const GeoFence= mongoose.model("GeoFence",GeoFenceSchema);
+const EntryExitLog = mongoose.model("EntryExitLog", EntryExitLogSchema);
 
 
-module.exports={User,Student,GeoFence};
+module.exports={User,Student,GeoFence,EntryExitLog};
 

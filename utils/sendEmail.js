@@ -17,18 +17,7 @@ const sendEmail = async (to, subject, message) => {
             subject,
             html: `<p>${message}</p>`
         };
-        // const mailOptions1 = {
-        //     from: '"GeoVigile Alerts" <geoRoutes.alerts@gmail.com>',
-        //     to,
-        //     subject,
-        //     html: `<p>${message}</p>`
-        // };
-             // const mailOptions2 = {
-        //     from: '"GeoVigile Alerts" <geovigile.alerts@gmail.com>',
-        //     to,
-        //     subject,
-        //     html: `<p>${message}</p>`
-        // };
+       
 
 
         const info = await transporter.sendMail(mailOptions);
