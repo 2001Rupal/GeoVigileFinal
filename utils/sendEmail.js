@@ -7,7 +7,7 @@ const sendEmail = async (to, subject, message) => {
             service: 'gmail',
             auth: {
                 user: 'geovigile.alerts@gmail.com', 
-                pass: 'rszc qqje bvkd kotx'     // app password
+                pass: ''     // app password
             }
         });
 
